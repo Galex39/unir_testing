@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  rest-petclinic:
+    image: springcommunity/spring-petclinic-rest:latest
+    restart: unless-stopped
+    ports:
+      - 9966:9966
+  
+  angular-petclinic:
+    image: spring-petclinic-angular:latest
+    restart: unless-stopped
+    depends_on:
+      - rest-petclinic
+    ports:
+      - 4400:8080

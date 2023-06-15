@@ -1,4 +1,6 @@
+import unittest
 import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -14,64 +16,86 @@ from selenium.webdriver.common.by import By
 # 6. Damos click en el boton de buscar, se cargará en la tabla la información filtada por el criterio de busqueda.
 # 7. Damos click en el registro insertado filtrado en la tabla para ver la información del dueño creado.
 
-driver = webdriver.Chrome()
 
-new_owner = {
-    "firstName": "Andrew",
-    "lastName": "Triana",
-    "address": "Av 45",
-    "city": "New York",
-    "telephone": "57300912547"
-}
+class PetclinicAddNewOwnerTest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
 
-# Open web application
-driver.get('http://localhost:4400')
+    def test_add_new_owner(self):
+        new_owner = {
+            "firstName": "Andrew",
+            "lastName": "Triana",
+            "address": "Av 45",
+            "city": "New York",
+            "telephone": "300912547",
+        }
 
-time.sleep(2)
+        # Open web application
+        self.driver.get("http://localhost:4400")
 
-# Open drop down to find button to navigate
-element = driver.find_element(By.CSS_SELECTOR, "a.dropdown-toggle")
-element.click()
+        time.sleep(2)
 
-time.sleep(1)
+        # Open drop down to find button to navigate
+        element = self.driver.find_element(By.CSS_SELECTOR, "a.dropdown-toggle")
+        element.click()
 
-# Click search owner butto to navigate to /owners
-continue_link = driver.find_element(By.LINK_TEXT, 'ADD NEW')
-continue_link.click()
+        time.sleep(1)
 
-time.sleep(1)
+        # Click search owner butto to navigate to /owners
+        continue_link = self.driver.find_element(By.LINK_TEXT, "ADD NEW")
+        continue_link.click()
 
-add_owner_form = driver.find_element(By.TAG_NAME, "form")
+        time.sleep(1)
 
-for key, value in new_owner.items():
-    html_input = add_owner_form.find_element(By.ID, key)
-    html_input.send_keys(value)
+        add_owner_form = self.driver.find_element(By.TAG_NAME, "form")
 
-time.sleep(1)
+        for key, value in new_owner.items():
+            html_input = add_owner_form.find_element(By.ID, key)
+            html_input.send_keys(value)
 
-form_buttons = add_owner_form.find_elements(By.TAG_NAME, "button")
-form_buttons[1].click()
+        time.sleep(1)
 
-time.sleep(1)
+        form_buttons = add_owner_form.find_elements(By.TAG_NAME, "button")
+        form_buttons[1].click()
 
-# Find search form
-search_form = driver.find_element(By.ID, "search-owner-form")
+        time.sleep(1)
 
-# Getting search input and send search criteria
-search_input = search_form.find_element(By.ID, "lastName")
-search_input.send_keys("Triana")
+        # Find search form
+        search_form = self.driver.find_element(By.ID, "search-owner-form")
 
-time.sleep(2)
+        # Getting search input and send search criteria
+        search_input = search_form.find_element(By.ID, "lastName")
+        search_input.send_keys("Triana")
 
-# Clicking search button
-search_button = search_form.find_element(By.TAG_NAME, "button")
-search_button.click()
+        time.sleep(2)
 
-time.sleep(2)
+        # Clicking search button
+        search_button = search_form.find_element(By.TAG_NAME, "button")
+        search_button.click()
 
-# Find table and find row
-owners_table = driver.find_element(By.ID, "ownersTable")
-owner_links = owners_table.find_elements(By.TAG_NAME, "a")
-owner_links[0].click()
+        time.sleep(2)
 
-time.sleep(3)
+        # Find table and find row
+        owners_table = self.driver.find_element(By.ID, "ownersTable")
+        owner_links = owners_table.find_elements(By.TAG_NAME, "a")
+        owner_links[0].click()
+
+        # Verify inserted information
+        owner_detailed_info = self.driver.find_element(By.TAG_NAME, "table")
+        owner_information = owner_detailed_info.find_elements(By.TAG_NAME, "td")
+
+        self.assertEqual(
+            owner_information[0].text, f"{new_owner.get('firstName')} {new_owner.get('lastName')}"
+        )
+        self.assertEqual(owner_information[1].text, new_owner.get("address"))
+        self.assertEqual(owner_information[2].text, new_owner.get("city"))
+        self.assertEqual(owner_information[3].text, new_owner.get("telephone"))
+
+        time.sleep(1)
+
+    def tearDown(self):
+        self.driver.quit()
+
+
+if __name__ == "__main__":
+    unittest.main()

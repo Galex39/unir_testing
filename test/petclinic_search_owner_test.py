@@ -1,4 +1,6 @@
+import unittest
 import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
@@ -13,46 +15,68 @@ from selenium.webdriver.common.by import By
 # 7. Damos click en uno de los regsitros filtrados en la tabla para ver la información de un dueño especifico.
 
 
-driver = webdriver.Chrome()
+class PetclinicSearchOwnerTest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
 
-# Open web application
-driver.get('http://localhost:4400')
+    def test_search_owner(self):
+        owner = {
+            "fullName": "Betty Davis",
+            "address": "638 Cardinal Ave.",
+            "city": "Sun Prairie",
+            "telephone": "6085551749",
+        }
 
-time.sleep(2)
+        # Open web application
+        self.driver.get("http://localhost:4400")
 
-# Open drop down to find button to navigate
-element = driver.find_element(By.CSS_SELECTOR, "a.dropdown-toggle")
-element.click()
+        time.sleep(2)
 
-time.sleep(1)
+        # Open drop down to find button to navigate
+        element = self.driver.find_element(By.CSS_SELECTOR, "a.dropdown-toggle")
+        element.click()
 
-# Click search owner butto to navigate to /owners
-continue_link = driver.find_element(By.LINK_TEXT, 'SEARCH')
-continue_link.click()
+        time.sleep(1)
 
-time.sleep(1)
+        # Click search owner butto to navigate to /owners
+        continue_link = self.driver.find_element(By.LINK_TEXT, "SEARCH")
+        continue_link.click()
 
-# Find search form
-search_form = driver.find_element(By.ID, "search-owner-form")
+        time.sleep(1)
 
-# Getting search input and send search criteria
-search_input = search_form.find_element(By.ID, "lastName")
-search_input.send_keys("Davis")
+        # Find search form
+        search_form = self.driver.find_element(By.ID, "search-owner-form")
 
-time.sleep(2)
+        # Getting search input and send search criteria
+        search_input = search_form.find_element(By.ID, "lastName")
+        search_input.send_keys("Davis")
 
-# Clicking search button
-search_button = search_form.find_element(By.TAG_NAME, "button")
-search_button.click()
+        time.sleep(2)
 
-time.sleep(1)
+        # Clicking search button
+        search_button = search_form.find_element(By.TAG_NAME, "button")
+        search_button.click()
 
-# Find table and find row
-owners_table = driver.find_element(By.ID, "ownersTable")
-owner_links = owners_table.find_elements(By.TAG_NAME, "a")
-owner_links[0].click()
+        time.sleep(1)
 
-time.sleep(3)
+        # Find table and find row
+        owners_table = self.driver.find_element(By.ID, "ownersTable")
+        owner_links = owners_table.find_elements(By.TAG_NAME, "a")
+        owner_links[0].click()
+        time.sleep(1)
 
-# close
-driver.quit()
+        # Verify owner data
+        owner_detailed_info = self.driver.find_element(By.TAG_NAME, "table")
+        owner_information = owner_detailed_info.find_elements(By.TAG_NAME, "td")
+
+        self.assertEqual(owner_information[0].text, owner.get("fullName"))
+        self.assertEqual(owner_information[1].text, owner.get("address"))
+        self.assertEqual(owner_information[2].text, owner.get("city"))
+        self.assertEqual(owner_information[3].text, owner.get("telephone"))
+
+    def tearDown(self) -> None:
+        self.driver.quit()
+
+
+if __name__ == "__main__":
+    unittest.main()

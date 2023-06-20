@@ -4,10 +4,30 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+from config import config
+
+# Feature: Create New Veterinarian
+#
+#   Scenario: Add a new veterinarian
+#     Given I am on the home page
+#     When I click on the "VETERINARIANS" navigation menu
+#     Then a menu with options "ALL" and "ADD NEW" should be displayed
+#     When I click on the "ADD NEW" option
+#     Then it should display the add veterinarians view
+#     When I fill out the new vet form
+#     And I click on the save vet button
+#     Then it should redirect me to the vets table view
+#     And I should see the newly created vet in the table
+
 
 class PetclinicAddNewVetTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        if config.get("selenium_web_driver") == "firefox":
+            self.driver = webdriver.Firefox()
+        elif config.get("selenium_web_driver") == "edge":
+            self.driver = webdriver.Edge()
+        else:
+            self.driver = webdriver.Chrome()
 
     def test_add_new_vet(self):
         # Open web application

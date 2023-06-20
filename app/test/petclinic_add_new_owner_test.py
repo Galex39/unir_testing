@@ -4,22 +4,34 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-# Ruta de validación crear dueño de mascota
+from config import config
 
-# 1. Abrir home page.
-# 2. Dar click en el menú de navegación en la opción `owners`.
-# 3. Se debe desplegar un menú de dos opciones, con la opción `search` y `add new`.
-# 4. Se hace click en la opción de `add new`, que nos llevará a la vista de crear nuevo dueño.
-# 5. Llenamos los datos del formulario para crear un nuevo dueño
-# 6. Damos click en el boton de `add owner`, esto nos llevara de nuevo a la vista de busqueda
-# 7. Ingresaremos el criterio de busqueda en el input del formulario `Triana`.
-# 6. Damos click en el boton de buscar, se cargará en la tabla la información filtada por el criterio de busqueda.
-# 7. Damos click en el registro insertado filtrado en la tabla para ver la información del dueño creado.
+# Feature: Validating owner creation
+#
+#   Scenario: Creating a new owner
+#     Given I am on the home page
+#     When I click on the "owners" navigation menu
+#     Then a menu with options "search" and "add new" should be displayed
+#     When I click on the "add new" option
+#     Then I should be taken to the new owner creation view
+#     When I fill in the form with the owner data
+#     And I click the "add owner" button
+#     Then I should be redirected to the search view
+#     When I enter the search criteria "Triana" in the search input field
+#     And I click the search button
+#     Then the table should be populated with owners filtered by the search criteria
+#     When I click on the inserted record in the table
+#     Then I should see the information of the created owner
 
 
 class PetclinicAddNewOwnerTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        if config.get("selenium_web_driver") == "firefox":
+            self.driver = webdriver.Firefox()
+        elif config.get("selenium_web_driver") == "edge":
+            self.driver = webdriver.Edge()
+        else:
+            self.driver = webdriver.Chrome()
 
     def test_add_new_owner(self):
         new_owner = {

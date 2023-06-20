@@ -1,0 +1,6 @@
+# The navigator driver that Selenium test will be used
+# Values:
+#   - chrome
+#   - firefox
+#   - edge
+selenium_web_driver: edge

@@ -23,7 +23,7 @@ const SLEEP_DURATION = 0.1;
 // Global variables should be initialized.
 
 export let options = {
-    vus: 2000, // Virtual Users (concurrent users)
+    vus: 5000, // Virtual Users (concurrent users)
     duration: '30s', // Duration of the test
 };
 
@@ -107,6 +107,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/owners", () => {
         let lastName = 'Davis';
         let url = BASE_URL + `/petclinic/api/owners?lastName=${lastName}`;
@@ -135,6 +136,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/owners/{ownerId}", () => {
         let ownerId = '8';
         let url = BASE_URL + `/petclinic/api/owners/${ownerId}`;
@@ -173,6 +175,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/owners/{ownerId}/pets", () => {
         let ownerId = '3';
         let url = BASE_URL + `/petclinic/api/owners/${ownerId}/pets`;
@@ -188,6 +191,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/owners/{ownerId}/pets/{petId}", () => {
         let petId = '4'; // specify value as there is no example value for this parameter in OpenAPI spec
         let ownerId = '3'; // specify value as there is no example value for this parameter in OpenAPI spec
@@ -214,6 +218,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/owners/{ownerId}/pets/{petId}/visits", () => {
         let petId = '4'; // specify value as there is no example value for this parameter in OpenAPI spec
         let ownerId = '3'; // specify value as there is no example value for this parameter in OpenAPI spec
@@ -230,6 +235,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/pets", () => {
         let url = BASE_URL + `/petclinic/api/pets`;
         // Request No. 1
@@ -251,6 +257,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/pets/{petId}", () => {
         let petId = '4'; // specify value as there is no example value for this parameter in OpenAPI spec
         let url = BASE_URL + `/petclinic/api/pets/${petId}`;
@@ -283,6 +290,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/pettypes", () => {
         let url = BASE_URL + `/petclinic/api/pettypes`;
         // Request No. 1
@@ -304,6 +312,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/pettypes/{petTypeId}", () => {
         let petTypeId = '2'; // specify value as there is no example value for this parameter in OpenAPI spec
         let url = BASE_URL + `/petclinic/api/pettypes/${petTypeId}`;
@@ -336,6 +345,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/", () => {
         let url = BASE_URL + `/petclinic/`;
         // Request No. 1
@@ -415,6 +425,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/specialties", () => {
         let url = BASE_URL + `/petclinic/api/specialties`;
         // Request No. 1
@@ -436,6 +447,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/specialties/{specialtyId}", () => {
         let specialtyId = '1';
         let url = BASE_URL + `/petclinic/api/specialties/${specialtyId}`;
@@ -468,6 +480,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/users", () => {
         let url = BASE_URL + `/petclinic/api/users`;
         // Request No. 1
@@ -482,6 +495,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/vets", () => {
         let url = BASE_URL + `/petclinic/api/vets`;
         // Request No. 1
@@ -510,6 +524,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/vets/{vetId}", () => {
         let vetId = '1';
         let url = BASE_URL + `/petclinic/api/vets/${vetId}`;
@@ -549,6 +564,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/visits", () => {
         let url = BASE_URL + `/petclinic/api/visits`;
         // Request No. 1
@@ -570,6 +586,7 @@ export default function () {
         });
         sleep(SLEEP_DURATION);
     });
+
     group("/petclinic/api/visits/{visitId}", () => {
         let visitId = '3';
         let url = BASE_URL + `/petclinic/api/visits/${visitId}`;

@@ -4,20 +4,31 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-# Ruta de validación para buscar dueño
+from config import config
 
-# 1. Abrir home page.
-# 2. Dar click en el menú de navegación en la opción `owners`.
-# 3. Se debe desplegar un menú de dos opciones, con la opción `search` y `add new`.
-# 4. Se hace click en la opción de search, que nos llevará a la vista de busqueda de dueños.
-# 5. Ingresaremos el criterio de busqueda el input del formulario el cul es un apellido.
-# 6. Damos click en el boton de buscar, se cargará en la tabla la información filtada por el criterio de busqueda.
-# 7. Damos click en uno de los regsitros filtrados en la tabla para ver la información de un dueño especifico.
+# Feature: Validating owner search
+#
+#   Scenario: Searching for an owner
+#     Given I am on the home page
+#     When I click on the "owners" navigation menu
+#     Then a menu with options "search" and "add new" should be displayed
+#     When I click on the "search" option
+#     Then I should be taken to the owner search view
+#     When I enter the search criteria in the input field
+#     And I click the search button
+#     Then the table should be populated with owners filtered by the search criteria
+#     When I click on one of the filtered records in the table
+#     Then I should see the details of the specific owner
 
 
 class PetclinicSearchOwnerTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        if config.get("selenium_web_driver") == "firefox":
+            self.driver = webdriver.Firefox()
+        elif config.get("selenium_web_driver") == "edge":
+            self.driver = webdriver.Edge()
+        else:
+            self.driver = webdriver.Chrome()
 
     def test_search_owner(self):
         owner = {

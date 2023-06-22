@@ -6,23 +6,6 @@ from selenium.webdriver.common.by import By
 
 from config import config
 
-# Feature: Validating owner creation
-#
-#   Scenario: Creating a new owner
-#     Given I am on the home page
-#     When I click on the "owners" navigation menu
-#     Then a menu with options "search" and "add new" should be displayed
-#     When I click on the "add new" option
-#     Then I should be taken to the new owner creation view
-#     When I fill in the form with the owner data
-#     And I click the "add owner" button
-#     Then I should be redirected to the search view
-#     When I enter the search criteria "Triana" in the search input field
-#     And I click the search button
-#     Then the table should be populated with owners filtered by the search criteria
-#     When I click on the inserted record in the table
-#     Then I should see the information of the created owner
-
 
 class PetclinicAddNewOwnerTest(unittest.TestCase):
     def setUp(self):
@@ -33,6 +16,29 @@ class PetclinicAddNewOwnerTest(unittest.TestCase):
         else:
             self.driver = webdriver.Chrome()
 
+    # Feature: Validating owner creation
+    #
+    #   Scenario: Creating a new owner
+    #    Given I am on the home page
+    #    When I click on the "owners" navigation menu
+    #    Then a menu with options "search" and "add new" should be displayed
+    #    When I click on the "add new" option
+    #    Then I should be taken to the new owner creation view
+    #    When I fill in the form with the following owner data:
+    #      | firstName | lastName | address | city     | telephone |
+    #      | Andrew    | Triana   | Av 45   | New York | 300912547 |
+    #    And I click the "add owner" button
+    #    Then I should be redirected to the search view
+    #    When I enter the search criteria "Triana" in the search input field
+    #    And I click the search button
+    #    Then the table should be populated with owners filtered by the search criteria
+    #    When I click on the inserted record in the table
+    #    Then I should see the following information of the created owner:
+    #      | Field     | Value     |
+    #      | Name      | Andrew Triana |
+    #      | Address   | Av 45 |
+    #      | City      | New York |
+    #      | Telephone | 300912547 |
     def test_add_new_owner(self):
         new_owner = {
             "firstName": "Andrew",
@@ -104,6 +110,62 @@ class PetclinicAddNewOwnerTest(unittest.TestCase):
         self.assertEqual(owner_information[3].text, new_owner.get("telephone"))
 
         time.sleep(1)
+
+    # Feature: Validating owner creation with invalid data length
+
+    #    Scenario: Adding a new owner with invalid data length
+    #        Given I am on the home page
+    #        When I click on the "owners" navigation menu
+    #        Then a menu with options "search" and "add new" should be displayed
+    #        When I click on the "add new" option
+    #        Then I should be taken to the new owner creation view
+    #        When I fill in the form with the owner data
+    #            | firstName | lastName | address | city     | telephone |
+    #            | a    | a   | a   | a | a |
+    #        Then the "add owner" button should be disabled
+    #        And each input field should have the "ng-invalid" class
+
+    def test_add_new_owner_with_invalida_len_data(self):
+        new_owner = {
+            "firstName": "a",
+            "lastName": "a",
+            "address": "a",
+            "city": "a",
+            "telephone": "a",
+        }
+
+        # Open web application
+        self.driver.get("http://localhost:4400")
+
+        time.sleep(2)
+
+        # Open drop down to find button to navigate
+        element = self.driver.find_element(By.CSS_SELECTOR, "a.dropdown-toggle")
+        element.click()
+
+        time.sleep(1)
+
+        # Click search owner butto to navigate to /owners
+        continue_link = self.driver.find_element(By.LINK_TEXT, "ADD NEW")
+        continue_link.click()
+
+        time.sleep(1)
+
+        add_owner_form = self.driver.find_element(By.TAG_NAME, "form")
+
+        for key, value in new_owner.items():
+            html_input = add_owner_form.find_element(By.ID, key)
+            html_input.send_keys(value)
+
+        time.sleep(1)
+
+        form_buttons = add_owner_form.find_elements(By.TAG_NAME, "button")
+        self.assertFalse(form_buttons[1].is_enabled())
+
+        for key, value in new_owner.items():
+            html_input = add_owner_form.find_element(By.ID, key)
+            input_classes = html_input.get_attribute("class").split(" ")
+            self.assertIn("ng-invalid", input_classes)
 
     def tearDown(self):
         self.driver.quit()
